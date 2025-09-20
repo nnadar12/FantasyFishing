@@ -1,8 +1,16 @@
-const express = require('express');
-const path = require('path');
-const multer = require('multer');
-const cors = require('cors');
-const fs = require('fs');
+import express from 'express';
+import path from 'path';
+import multer from 'multer';
+import cors from 'cors';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Import the analysis function
+import { getFish } from './analyzeFish.js';
+
+// Because "type": "module" is in package.json, __dirname is not available. This is the workaround.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -43,13 +51,29 @@ app.get('/', (req, res) => {
 
 // --- API Endpoints ---
 
-// Endpoint for file uploads
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// Endpoint for file uploads and analysis
+app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded.' });
     }
-    // Send back the path to the file
-    res.status(200).json({ filePath: `/uploads/${req.file.filename}` });
+
+    try {
+        // Get the full path of the uploaded file
+        const imagePath = req.file.path;
+        
+        // Call the AI function to get fish data
+        const analysisResult = await getFish(imagePath);
+
+        // Send back the file path and the analysis
+        res.status(200).json({
+            filePath: `/uploads/${req.file.filename}`,
+            analysis: analysisResult
+        });
+
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        res.status(500).json({ message: 'Failed to analyze the image.', error: error.message });
+    }
 });
 
 // Endpoint to get a list of all uploaded images

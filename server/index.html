@@ -46,7 +46,7 @@
                     
                     <!-- This container will be shown after image selection -->
                     <div id="fish-info" class="hidden">
-                        <h3>Fish Details (AI Simulated)</h3>
+                        <h3>Fish Details</h3>
                         <p><strong>Species:</strong> <span id="species"></span></p>
                         <p><strong>Weight:</strong> <span id="weight"></span></p>
                         <p><strong>Length:</strong> <span id="length"></span></p>
@@ -83,6 +83,12 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Loading Screen Overlay -->
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+        <p>Analyzing your catch...</p>
     </div>
 
     <script src="script.js"></script>
