@@ -1,19 +1,15 @@
 // All args after the script name
-/*const args = process.argv.slice(2);
+const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Usage: node read.js <arg> [more args]");
   process.exit(1);
 }
-read(args);*/
-import { spawn } from "child_process";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+read(args);
 function read(args) {
+  const { spawn } = require("child_process");
+  const path = require("path");
+  const fs = require("fs");
+
   const scriptDir = __dirname; // /.../server/data
   const repoRoot = path.resolve(scriptDir, "..", "..");
 
@@ -49,5 +45,3 @@ function read(args) {
     console.log(`child process exited with code ${code}`);
   });
 }
-
-export { read };
