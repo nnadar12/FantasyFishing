@@ -1,15 +1,19 @@
 // All args after the script name
-const args = process.argv.slice(2);
+/*const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Usage: node save.js <arg> [more args]");
   process.exit(1);
 }
-save(args);
-function save(args) {
-  const { spawn } = require("child_process");
-  const path = require("path");
-  const fs = require("fs");
+save(args);*/
+import { spawn } from "child_process";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function save(args) {
   const scriptDir = __dirname; // /.../server/data
   const repoRoot = path.resolve(scriptDir, "..", "..");
 
