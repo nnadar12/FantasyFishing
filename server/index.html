@@ -10,18 +10,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Initial Login Screen -->
-    <div id="login-container">
-        <div class="login-box">
-            <h1>Fantasy Fishing</h1>
-            <input type="text" placeholder="Username" value="nicholas">
-            <input type="password" placeholder="Password" value="••••••••">
-            <button id="login-btn">Login</button>
-        </div>
-    </div>
-
-    <!-- Main App Interface (Initially Hidden) -->
-    <div id="app-container" class="hidden">
+    <!-- Main App Interface -->
+    <div id="app-container">
         <header>
             <div class="logo">Fantasy Fishing</div>
             <nav>
@@ -29,6 +19,7 @@
                 <a href="#upload">Catch</a>
                 <a href="#leagues">Leagues</a>
                 <a href="#profile">Profile</a>
+                <a href="#" id="logout-btn">Logout</a>
             </nav>
         </header>
 
@@ -43,12 +34,17 @@
                 <div class="upload-box">
                     <h2>Log a New Catch</h2>
                     <div class="image-preview">
+                        <!-- The initially hidden image tag for the preview -->
                         <img id="preview-image" src="#" alt="Image Preview" class="hidden"/>
+                        
+                        <!-- The file input is hidden and triggered by the label -->
                         <label for="file-upload" class="custom-file-upload">
                             <i class="fas fa-camera"></i> Take or Upload Photo
                         </label>
                         <input id="file-upload" type="file" accept="image/*"/>
                     </div>
+                    
+                    <!-- This container will be shown after image selection -->
                     <div id="fish-info" class="hidden">
                         <h3>Fish Details (AI Simulated)</h3>
                         <p><strong>Species:</strong> <span id="species"></span></p>
@@ -56,7 +52,9 @@
                         <p><strong>Length:</strong> <span id="length"></span></p>
                         <p><strong>Points:</strong> <span id="points"></span></p>
                     </div>
-                    <button id="submit-catch-btn" class="hidden">Add to Logbook</button>
+                    
+                    <!-- The publish button, also initially hidden -->
+                    <button id="submit-catch-btn" class="hidden">Publish</button>
                 </div>
             </section>
 
@@ -74,12 +72,12 @@
             
             <!-- User Profile Section -->
             <section id="profile" class="hidden">
+                <!-- THE CHANGE: Elements now have IDs and empty content -->
                 <div class="profile-header">
-                    <img src="https://i.pravatar.cc/150?u=nicholas" alt="User Avatar">
-                    <h2>Nicholas</h2>
+                    <img id="profile-avatar" src="" alt="User Avatar">
+                    <h2 id="profile-username"></h2>
                 </div>
                 <h3>My Catches</h3>
-                <!-- Added ID for a more specific and reliable JS selector -->
                 <div id="user-catches-grid">
                     <!-- User's catches are dynamically inserted here -->
                 </div>
