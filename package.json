@@ -1,0 +1,19 @@
+{
+  "name": "fantasyfishing",
+  "version": "1.0.0",
+  "description": "Competetive Fishing App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nnadar12/FantasyFishing.git"
+  },
+  "author": "Nicholas Nadar, Eric Chang, Nanson Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nnadar12/FantasyFishing/issues"
+  },
+  "homepage": "https://github.com/nnadar12/FantasyFishing#readme"
+}
