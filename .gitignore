@@ -4,4 +4,5 @@ node_modules
 package-lock.json
 package.json
 server/data/data.txt
+server/data/output.txt
 .vscode
