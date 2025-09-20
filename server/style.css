@@ -29,12 +29,42 @@ body {
 }
 
 /* Login Page Styles */
-#login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+/* THE CHANGE: Updated login container with background image and left alignment */
+#login-container {
+    display: flex;
+    justify-content: flex-start; /* Aligns content to the left */
+    align-items: center;
+    height: 100vh;
+    background-image: url('https://bloximages.newyork1.vip.townnews.com/appenmedia.com/content/tncms/assets/v3/editorial/e/2c/e2cfaba0-d294-11ed-b11a-c36ea4f21ca7/642b93e0f24ef.preview.jpg?crop=1187%2C623%2C0%2C130'); /* Your fish image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-left: 10vw; /* Adds space from the left edge */
+}
+
 .login-box { background: var(--card-background); padding: 3rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px; }
 .login-box h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-color); }
 .login-box input { width: 100%; padding: 1rem; margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
 .login-box button { width: 100%; padding: 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color 0.2s; }
 .login-box button:hover { background-color: #2563eb; }
+
+.login-box .signup-link {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.login-box .signup-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+.login-box .signup-link a:hover {
+    text-decoration: underline;
+}
+
 
 /* App Container & Header */
 header {
