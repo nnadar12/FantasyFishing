@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Fishing</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐠</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Initial Login Screen -->
+    <div id="login-container">
+        <div class="login-box">
+            <h1>Fantasy Fishing</h1>
+            <input type="text" placeholder="Username" value="nicholas">
+            <input type="password" placeholder="Password" value="••••••••">
+            <button id="login-btn">Login</button>
+        </div>
+    </div>
+
+    <!-- Main App Interface (Initially Hidden) -->
+    <div id="app-container" class="hidden">
+        <header>
+            <div class="logo">Fantasy Fishing</div>
+            <nav>
+                <a href="#feed" class="active">Feed</a>
+                <a href="#upload">Catch</a>
+                <a href="#leagues">Leagues</a>
+                <a href="#profile">Profile</a>
+            </nav>
+        </header>
+
+        <main>
+            <!-- The Feed Section will be populated by JavaScript -->
+            <section id="feed">
+                <!-- Feed items are dynamically inserted here -->
+            </section>
+
+            <!-- Upload a New Catch Section -->
+            <section id="upload" class="hidden">
+                <div class="upload-box">
+                    <h2>Log a New Catch</h2>
+                    <div class="image-preview">
+                        <img id="preview-image" src="#" alt="Image Preview" class="hidden"/>
+                        <label for="file-upload" class="custom-file-upload">
+                            <i class="fas fa-camera"></i> Take or Upload Photo
+                        </label>
+                        <input id="file-upload" type="file" accept="image/*"/>
+                    </div>
+                    <div id="fish-info" class="hidden">
+                        <h3>Fish Details (AI Simulated)</h3>
+                        <p><strong>Species:</strong> <span id="species"></span></p>
+                        <p><strong>Weight:</strong> <span id="weight"></span></p>
+                        <p><strong>Length:</strong> <span id="length"></span></p>
+                        <p><strong>Points:</strong> <span id="points"></span></p>
+                    </div>
+                    <button id="submit-catch-btn" class="hidden">Add to Logbook</button>
+                </div>
+            </section>
+
+            <!-- Leagues Section -->
+            <section id="leagues" class="hidden">
+                <div class="league-container">
+                    <h2>My Leagues</h2>
+                    <div class="league-card">
+                        <h3>Weekend Warriors</h3>
+                        <p>1st Place: Angler_Alex (1530 pts)</p>
+                        <p>Your Rank: 3rd (950 pts)</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- User Profile Section -->
+            <section id="profile" class="hidden">
+                <div class="profile-header">
+                    <img src="https://i.pravatar.cc/150?u=nicholas" alt="User Avatar">
+                    <h2>Nicholas</h2>
+                </div>
+                <h3>My Catches</h3>
+                <!-- Added ID for a more specific and reliable JS selector -->
+                <div id="user-catches-grid">
+                    <!-- User's catches are dynamically inserted here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

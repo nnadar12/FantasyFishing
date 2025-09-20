@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #3b82f6; 
+    --secondary-color: #14b8a6;
+    --background-color: #f8fafc;
+    --text-color: #334155;
+    --text-color-light: #64748b;
+    --card-background: #ffffff;
+    --shadow: 0 4px 12px rgba(0,0,0,0.05);
+    --border-color: #eaf0f6; /* Lighter border color */
+    --border-radius: 20px; /* Slightly larger radius to match image */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Login Page Styles (Unchanged) */
+#login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+.login-box { background: var(--card-background); padding: 3rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px; }
+.login-box h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-color); }
+.login-box input { width: 100%; padding: 1rem; margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+.login-box button { width: 100%; padding: 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color 0.2s; }
+.login-box button:hover { background-color: #2563eb; }
+
+/* --- App Container & Header --- */
+header {
+    background: var(--card-background);
+    padding: 1rem 2rem;
+    box-shadow: none; /* Removed shadow for a flatter look */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+}
+header .logo { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); }
+header nav a { text-decoration: none; color: var(--text-color-light); margin-left: 2rem; font-weight: 500; padding: 0.5rem 0; border-bottom: 3px solid transparent; transition: color 0.3s ease, border-bottom-color 0.3s ease; }
+header nav a.active, header nav a:hover { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+main { padding: 2rem; max-width: 680px; margin: 0 auto; }
+
+/* --- REVISED Feed Section Styles --- */
+#feed {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.feed-item {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex; /* Using flexbox for better alignment */
+    flex-direction: column;
+    gap: 0.75rem; /* Space between header, icon, and info */
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+}
+
+.post-header img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+.post-header .username {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* This is the new content section that holds the icon and text */
+.post-content {
+    padding-left: 57px; /* Aligns content with username text */
+}
+
+.post-content .fish-icon {
+    font-size: 1.5rem;
+    color: var(--text-color-light);
+    margin-bottom: 0.5rem; /* Space between icon and text */
+}
+
+.post-info h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.post-info p {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--text-color-light);
+    margin-bottom: 0.75rem;
+}
+
+.post-info .points {
+    font-weight: 700;
+    color: var(--secondary-color);
+    font-size: 1.25rem;
+}
+
+
+/* --- Other Sections --- */
+#upload .upload-box { background: var(--card-background); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow); max-width: 500px; margin: 2rem auto; text-align: center; }
+#leagues .league-card { background: var(--card-background); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 1rem; border: 1px solid var(--border-color); }
+#profile .profile-header { text-align: center; margin-bottom: 2rem; }
+#profile .profile-header img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 4px solid var(--card-background); box-shadow: var(--shadow); }
+#profile h3 { text-align: center; margin-bottom: 1.5rem; }
+#user-catches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+#user-catches-grid img { width: 100%; height: 200px; object-fit: cover; display: block; border-radius: 12px; box-shadow: var(--shadow); }
