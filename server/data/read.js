@@ -1,11 +1,11 @@
 // All args after the script name
-const args = process.argv.slice(2);
+/*const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Usage: node read.js <arg> [more args]");
   process.exit(1);
 }
-read(args);
-function read(args) {
+read(args);*/
+export function read(args) {
   const { spawn } = require("child_process");
   const path = require("path");
   const fs = require("fs");

@@ -1,11 +1,11 @@
 // All args after the script name
-const args = process.argv.slice(2);
+/*const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Usage: node save.js <arg> [more args]");
   process.exit(1);
 }
-save(args);
-function save(args) {
+save(args);*/
+export function save(args) {
   const { spawn } = require("child_process");
   const path = require("path");
   const fs = require("fs");
