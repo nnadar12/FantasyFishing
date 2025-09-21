@@ -1,8 +1,16 @@
-const express = require('express');
-const path = require('path');
-const multer = require('multer');
-const cors = require('cors');
-const fs = require('fs');
+import express from 'express';
+import path from 'path';
+import multer from 'multer';
+import cors from 'cors';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Import the analysis function
+import { getFish } from './analyzeFish.js';
+
+// Because "type": "module" is in package.json, __dirname is not available. This is the workaround.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -43,36 +51,76 @@ app.get('/', (req, res) => {
 
 // --- API Endpoints ---
 
-// Endpoint for file uploads
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// Endpoint for file uploads and analysis
+app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded.' });
     }
-    // Send back the path to the file
-    res.status(200).json({ filePath: `/uploads/${req.file.filename}` });
+
+    try {
+        // Get the full path of the uploaded file
+        const imagePath = req.file.path;
+        
+        // Call the AI function to get fish data
+        const analysisResult = await getFish(imagePath);
+
+        // Send back the file path and the analysis
+        res.status(200).json({
+            filePath: `/uploads/${req.file.filename}`,
+            analysis: analysisResult
+        });
+
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        res.status(500).json({ message: 'Failed to analyze the image.', error: error.message });
+    }
 });
 
-// Endpoint to get a list of all uploaded images
+// Endpoint to get a list of all analyzed catches
 app.get('/api/images', (req, res) => {
     const uploadDirectory = path.join(__dirname, 'uploads/');
     
     fs.readdir(uploadDirectory, (err, files) => {
         if (err) {
-            // If the directory doesn't exist, return an empty array
             if (err.code === 'ENOENT') {
                 return res.status(200).json([]);
             }
             return res.status(500).json({ message: 'Unable to scan directory.' });
         }
         
-        // Map files to their correct URL paths
-        const imagePaths = files
-            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-            .map(file => `/uploads/${file}`);
+        const imageFiles = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+        
+        const catchPromises = imageFiles.map(imageFile => {
+            return new Promise((resolve) => {
+                const imageName = path.parse(imageFile).name;
+                const jsonPath = path.join(uploadDirectory, `${imageName}.json`);
 
-        res.status(200).json(imagePaths);
+                fs.readFile(jsonPath, 'utf8', (err, data) => {
+                    if (err) {
+                        resolve(null); // JSON file not found or unreadable
+                    } else {
+                        try {
+                            const analysis = JSON.parse(data);
+                            // THE FIX: Directly use the analysis object, as it's no longer an array.
+                            resolve({
+                                imageUrl: `/uploads/${imageFile}`,
+                                analysis: analysis 
+                            });
+                        } catch (parseErr) {
+                            resolve(null); // JSON is corrupted
+                        }
+                    }
+                });
+            });
+        });
+
+        Promise.all(catchPromises).then(results => {
+            const validCatches = results.filter(r => r !== null);
+            res.status(200).json(validCatches);
+        });
     });
 });
+
 
 const port = process.env.PORT || 3000;
 
