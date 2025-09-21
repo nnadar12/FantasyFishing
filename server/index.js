@@ -6,8 +6,10 @@ import cors from 'cors';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
-// Import the analysis function
+// Import the analysis functions
 import { getFish } from './analyzeFish.js';
+// THE CHANGE: Import the new regulations function
+import { getRegulations } from './getRegulations.js';
 
 // Because "type": "module" is in package.json, __dirname is not available. This is the workaround.
 const __filename = fileURLToPath(import.meta.url);
@@ -16,25 +18,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // --- Middleware ---
-// Enable CORS for all routes
 app.use(cors());
-
-// Serve static files from the root directory (for index.html, script.js, etc.)
 app.use(express.static(__dirname));
-
-// Serve the 'uploads' folder as a static directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Multer Storage Configuration ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, 'uploads');
-    // Ensure the uploads directory exists
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    // Create a unique filename to prevent overwrites
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
@@ -43,8 +38,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // --- Routes ---
-
-// **THE FIX**: Add a root route to serve the login page by default.
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
@@ -58,15 +51,9 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 
   try {
-    // Get the full path of the uploaded file
     const imagePath = req.file.path;
+    const analysisResult = await getFish(imagePath);
 
-    // Call the AI function to get fish data
-    let analysisResult = await getFish(imagePath);
-    analysisResult['user_name'] = 'John Doe';
-    save(JSON.stringify(analysisResult));
-
-    // Send back the file path and the analysis
     res.status(200).json({
       filePath: `/uploads/${req.file.filename}`,
       analysis: analysisResult,
@@ -76,6 +63,32 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     res
       .status(500)
       .json({ message: 'Failed to analyze the image.', error: error.message });
+  }
+});
+
+// THE CHANGE: New API endpoint for fetching regulations
+app.get('/api/regulations', async (req, res) => {
+  const { species, state } = req.query; // Get species and state from query params
+
+  if (!species || !state) {
+    return res
+      .status(400)
+      .json({ message: 'Species and state are required parameters.' });
+  }
+
+  try {
+    // Call the imported function
+    const regulationsText = await getRegulations(species, state);
+    // Send the result back to the frontend
+    res.status(200).json({ summary: regulationsText });
+  } catch (error) {
+    console.error('Failed to get regulations:', error);
+    res
+      .status(500)
+      .json({
+        message: 'Failed to retrieve regulations.',
+        error: error.message,
+      });
   }
 });
 
@@ -114,20 +127,55 @@ app.get('/api/images', (req, res) => {
             } catch (parseErr) {
               resolve(null); // JSON is corrupted
             }
+            return res
+              .status(500)
+              .json({ message: 'Unable to scan directory.' });
           }
+
+          const imageFiles = files.filter((file) =>
+            /\.(jpg|jpeg|png|gif)$/i.test(file)
+          );
+
+          const catchPromises = imageFiles.map((imageFile) => {
+            return new Promise((resolve) => {
+              const imageName = path.parse(imageFile).name;
+              const jsonPath = path.join(uploadDirectory, `${imageName}.json`);
+
+              fs.readFile(jsonPath, 'utf8', (err, data) => {
+                if (err) {
+                  resolve(null);
+                } else {
+                  try {
+                    const analysis = JSON.parse(data);
+                    resolve({
+                      imageUrl: `/uploads/${imageFile}`,
+                      analysis: analysis,
+                    });
+                  } catch (parseErr) {
+                    resolve(null);
+                  }
+                }
+              });
+            });
+          });
+
+          Promise.all(catchPromises).then((results) => {
+            const validCatches = results.filter((r) => r !== null);
+            res.status(200).json(validCatches);
+          });
         });
       });
-    });
 
-    Promise.all(catchPromises).then((results) => {
-      const validCatches = results.filter((r) => r !== null);
-      res.status(200).json(validCatches);
+      Promise.all(catchPromises).then((results) => {
+        const validCatches = results.filter((r) => r !== null);
+        res.status(200).json(validCatches);
+      });
     });
   });
-});
 
-const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log('listening on port ' + port);
+  app.listen(port, () => {
+    console.log('listening on port ' + port);
+  });
 });
