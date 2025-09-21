@@ -2,10 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- User Session Management ---
     const loggedInUser = sessionStorage.getItem('fantasy-fishing-username');
 
-    // If no user is logged in, redirect to the login page immediately.
     if (!loggedInUser) {
         window.location.href = 'login.html';
-        return; // Stop further execution of the script
+        return;
     }
 
     // --- Element Selection ---
@@ -22,10 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const fishInfoContainer = document.getElementById('fish-info');
     const submitCatchBtn = document.getElementById('submit-catch-btn');
     const uploadBoxLabel = document.querySelector('.custom-file-upload');
-
-    // NEW: Loading overlay element
     const loadingOverlay = document.getElementById('loading-overlay');
     
+    // THE CHANGE: New selectors for description and location inputs
+    const descriptionInput = document.getElementById('description-input');
+    const locationInput = document.getElementById('location-input');
+    
+    const leagueCards = document.querySelectorAll('.league-card');
+    const backToLeaguesBtn = document.getElementById('back-to-leagues-btn');
+    const leagueDetailName = document.getElementById('league-detail-name');
+    const leagueNavLinks = document.querySelectorAll('.league-nav a');
+    const leagueTabContents = document.querySelectorAll('.league-tab-content');
+    const leagueFeed = document.getElementById('league-feed');
+    
+    const joinLeagueBtn = document.getElementById('join-league-btn');
+    const createLeagueBtn = document.getElementById('create-league-btn');
+
     // --- Dynamic User Data ---
     const userAvatarUrl = `https://i.pravatar.cc/150?u=${loggedInUser}`;
     profileUsername.textContent = loggedInUser;
@@ -33,14 +44,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- API and Data ---
     const API_URL = 'http://localhost:3000';
-    // NEW: Variable to hold data of the catch currently being uploaded
     let currentCatchData = null;
 
+    // THE CHANGE: Updated mock data to include timestamp, location, and description
     let masterFeedData = [
-        { username: 'Angler_Alex', avatar: 'https://i.pravatar.cc/150?u=angleralex', species: 'Largemouth Bass', weight: '5.2 lbs', length: '21 inches', points: 150, imageUrl: 'https://picsum.photos/600/400?random=1' },
-        { username: 'Fisher_Frank', avatar: 'https://i.pravatar.cc/150?u=fisherfrank', species: 'Rainbow Trout', weight: '3.1 lbs', length: '18 inches', points: 120, imageUrl: 'https://picsum.photos/600/400?random=2' },
-        { username: 'Reel_Rachel', avatar: 'https://i.pravatar.cc/150?u=reelrachel', species: 'Striped Bass', weight: '12.7 lbs', length: '30 inches', points: 280, imageUrl: 'https://picsum.photos/600/400?random=3' },
+        { username: 'Aadit', avatar: 'testFiles\fillerData\AaditPFP.jpg', species: 'Largemouth Bass', weight: '2.5 lbs', length: '18 inches', points: 10, imageUrl: 'testFiles\fillerData\AaditFish.jpeg', timestamp: '2025-09-20T10:00:00Z', location: 'Quabbin Reservoir', description: 'Off da boat on a wacky rig' },
+        { username: 'Daniel', avatar: 'https://i.pravatar.cc/150?u=fisherfrank', species: 'Largemouth Bass', weight: '4.0 lbs', length: '22 inches', points: 120, imageUrl: 'https://picsum.photos/600/400?random=2', timestamp: '2025-09-19T18:30:00Z', location: 'Madison River, MT', description: 'Great fight on a fly rod.' },
+        { username: 'Reel_Rachel', avatar: 'https://i.pravatar.cc/150?u=reelrachel', species: 'Striped Bass', weight: '12.7 lbs', length: '30 inches', points: 280, imageUrl: 'https://picsum.photos/600/400?random=3', timestamp: '2025-09-19T12:15:00Z', location: 'Cape Cod Canal, MA', description: '' },
+        { username: 'Angler_Alex', avatar: 'https://i.pravatar.cc/150?u=angleralex', species: 'Northern Pike', weight: '8.1 lbs', length: '28 inches', points: 200, imageUrl: 'https://picsum.photos/600/400?random=4', timestamp: '2025-09-18T15:00:00Z', location: 'Lake of the Woods, ON', description: 'A real water wolf!' },
+        { username: 'Reel_Rachel', avatar: 'https://i.pravatar.cc/150?u=reelrachel', species: 'Walleye', weight: '6.5 lbs', length: '24 inches', points: 180, imageUrl: 'https://picsum.photos/600/400?random=5', timestamp: '2025-09-17T20:00:00Z', location: 'Lake Erie, OH', description: 'Perfect evening for a catch.' },
+        { username: 'Fisher_Frank', avatar: 'https://i.pravatar.cc/150?u=fisherfrank', species: 'Catfish', weight: '15.3 lbs', length: '32 inches', points: 310, imageUrl: 'https://picsum.photos/600/400?random=6', timestamp: '2025-09-16T22:45:00Z', location: 'Mississippi River, LA', description: 'Took forever to reel this one in.' }
     ];
+    
+    const leaguesData = {
+        'weekend-warriors': {
+            name: 'Weekend Warriors',
+            members: ['Angler_Alex', 'Reel_Rachel', loggedInUser, 'Fisher_Frank']
+        }
+    };
+    let currentLeagueId = null;
 
     async function loadLocalCatches() {
         try {
@@ -49,31 +71,29 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const analyzedCatches = await response.json();
 
-            // THE FIX: This function now correctly processes the new JSON format.
             const localCatches = analyzedCatches
                 .map(catchItem => {
                     const fishData = catchItem.analysis;
-
-                    // Prevents a crash if a JSON file is empty or corrupted
                     if (!fishData || typeof fishData.weight === 'undefined') {
                         return null;
                     }
-                    
                     const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
                     const lengthInInches = `${fishData.length.toFixed(1)} inches`;
                     const points = Math.round(fishData.weight * 15 + fishData.length);
-
                     return {
                         username: loggedInUser,
                         avatar: userAvatarUrl,
-                        species: fishData.species, // Use 'species' instead of 'speciesName'
+                        species: fishData.species,
                         weight: weightInLbs,
                         length: lengthInInches,
                         points: points,
-                        imageUrl: `${API_URL}${catchItem.imageUrl}`
+                        imageUrl: `${API_URL}${catchItem.imageUrl}`,
+                        timestamp: new Date().toISOString(), // Default to now for loaded catches
+                        location: 'Unknown Location',
+                        description: 'My latest catch!'
                     };
                 })
-                .filter(item => item !== null); // Remove any corrupted items
+                .filter(item => item !== null);
 
             masterFeedData = [...localCatches.reverse(), ...masterFeedData];
         } catch (error) {
@@ -115,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = this.files[0];
         if (!file) return;
 
-        // 1. Show image preview locally
         const reader = new FileReader();
         reader.onload = (e) => {
             imagePreview.src = e.target.result;
@@ -124,9 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         reader.readAsDataURL(file);
 
-        // 2. Show loading screen and upload for analysis
         loadingOverlay.classList.remove('hidden');
-        submitCatchBtn.classList.add('hidden'); // Hide button until analysis is done
+        submitCatchBtn.classList.add('hidden');
         const formData = new FormData();
         formData.append('file', file);
 
@@ -142,34 +160,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const result = await response.json();
-            
-            // THE FIX: The result from the API is now a single object, not an array.
             const fishData = result.analysis;
 
             if (!fishData || typeof fishData.weight === 'undefined') {
                 throw new Error('Could not identify a fish in the image. Please try another one.');
             }
 
-            // 3. Populate form and store data for publishing
             const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
             const lengthInInches = `${fishData.length.toFixed(1)} inches`;
-            // Simple points calculation based on results
             const points = Math.round(fishData.weight * 15 + fishData.length);
 
-            document.getElementById('species').textContent = fishData.species; // Use 'species'
+            document.getElementById('species').textContent = fishData.species;
             document.getElementById('weight').textContent = weightInLbs;
             document.getElementById('length').textContent = lengthInInches;
             document.getElementById('points').textContent = points;
             
             currentCatchData = {
                 imageUrl: `${API_URL}${result.filePath}`,
-                species: fishData.species, // Use 'species'
+                species: fishData.species,
                 weight: weightInLbs,
                 length: lengthInInches,
                 points: points
             };
 
-            // 4. Show the populated info and the publish button
             fishInfoContainer.classList.remove('hidden');
             submitCatchBtn.classList.remove('hidden');
             submitCatchBtn.disabled = false;
@@ -179,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Failed to analyze catch: ${error.message}`);
             resetUploadForm();
         } finally {
-            // 5. Hide loading screen regardless of outcome
             loadingOverlay.classList.add('hidden');
         }
     });
@@ -193,10 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
         submitCatchBtn.textContent = 'Publishing...';
         submitCatchBtn.disabled = true;
 
-        // Create the new feed item from the stored, analyzed data
+        // THE CHANGE: Get values from new inputs and add to the new catch object
+        const description = descriptionInput.value;
+        const location = locationInput.value;
+
         const newCatch = {
             username: loggedInUser,
             avatar: userAvatarUrl,
+            description: description,
+            location: location,
+            timestamp: new Date().toISOString(), // Use ISO string for consistency
             ...currentCatchData
         };
 
@@ -208,24 +226,51 @@ document.addEventListener('DOMContentLoaded', () => {
         
         resetUploadForm();
     });
-    
+
+    leagueCards.forEach(card => {
+        card.addEventListener('click', () => {
+            currentLeagueId = card.dataset.leagueId;
+            showLeagueDetail(currentLeagueId);
+        });
+    });
+
+    backToLeaguesBtn.addEventListener('click', () => {
+        navigateTo('leagues');
+        currentLeagueId = null;
+    });
+
+    leagueNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            leagueNavLinks.forEach(navLink => navLink.classList.remove('active'));
+            link.classList.add('active');
+            
+            const targetTab = link.dataset.tab;
+            leagueTabContents.forEach(content => {
+                if (content.id === `${targetTab}-content`) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    joinLeagueBtn.addEventListener('click', () => {
+        alert('Join League functionality is coming soon!');
+    });
+
+    createLeagueBtn.addEventListener('click', () => {
+        alert('Create League functionality is coming soon!');
+    });
+
+
     // --- Render Functions ---
     function renderFeed() {
         feed.innerHTML = '';
         masterFeedData.forEach(item => {
-            const feedItem = document.createElement('div');
-            feedItem.classList.add('feed-item');
-            feedItem.innerHTML = `
-                <div class="post-header"><img src="${item.avatar}" alt="${item.username} avatar"><span class="username">${item.username}</span></div>
-                <div class="post-image"><img src="${item.imageUrl}" alt="Catch by ${item.username}"></div>
-                <div class="post-content">
-                    <div class="post-info">
-                        <h4>${item.species}</h4>
-                        <p>Weight: ${item.weight} | Length: ${item.length}</p>
-                        <p class="points">${item.points} points</p>
-                    </div>
-                </div>`;
-            feed.appendChild(feedItem);
+            feed.appendChild(createFeedItem(item, { showPoints: false }));
         });
     }
 
@@ -240,6 +285,73 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+    
+    function showLeagueDetail(leagueId) {
+        const league = leaguesData[leagueId];
+        if (!league) return;
+
+        leagueDetailName.textContent = league.name;
+        
+        renderLeagueFeed(leagueId);
+        renderLeaderboard(leagueId);
+        renderMembers(leagueId);
+        
+        leagueNavLinks.forEach(link => {
+            link.classList.toggle('active', link.dataset.tab === 'leaderboard');
+        });
+        leagueTabContents.forEach(content => {
+            content.classList.toggle('hidden', content.id !== 'leaderboard-content');
+        });
+
+        navigateTo('league-detail');
+    }
+
+    function renderLeagueFeed(leagueId) {
+        leagueFeed.innerHTML = '';
+        const league = leaguesData[leagueId];
+        const leagueMembers = league.members;
+        const feedItems = masterFeedData.filter(item => leagueMembers.includes(item.username));
+
+        feedItems.forEach(item => {
+            leagueFeed.appendChild(createFeedItem(item, { showPoints: true }));
+        });
+    }
+
+    function renderLeaderboard(leagueId) {
+        const container = document.getElementById('leaderboard-content');
+        const league = leaguesData[leagueId];
+        const scores = {};
+
+        league.members.forEach(member => {
+            scores[member] = 0;
+        });
+
+        masterFeedData.forEach(item => {
+            if (league.members.includes(item.username)) {
+                scores[item.username] += item.points;
+            }
+        });
+
+        const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+        let tableHtml = '<table class="leaderboard-table"><tr><th>Rank</th><th>User</th><th>Points</th></tr>';
+        sortedScores.forEach(([user, points], index) => {
+            tableHtml += `<tr><td>${index + 1}</td><td>${user}</td><td>${points}</td></tr>`;
+        });
+        tableHtml += '</table>';
+        container.innerHTML = tableHtml;
+    }
+
+    function renderMembers(leagueId) {
+        const container = document.getElementById('members-content');
+        const league = leaguesData[leagueId];
+        let listHtml = '<h3>League Members</h3><ul class="member-list">';
+        league.members.forEach(member => {
+            listHtml += `<li>${member}</li>`;
+        });
+        listHtml += '</ul>';
+        container.innerHTML = listHtml;
+    }
 
     // --- Helper Functions ---
     function resetUploadForm() {
@@ -251,7 +363,42 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadBoxLabel.classList.remove('hidden');
         submitCatchBtn.disabled = false;
         submitCatchBtn.textContent = 'Publish';
-        currentCatchData = null; // Clear the stored data
+        currentCatchData = null;
+        
+        // THE CHANGE: Reset new input fields
+        descriptionInput.value = '';
+        locationInput.value = '';
+    }
+    
+    // THE CHANGE: This function now renders date, location, and description
+    function createFeedItem(item, options = { showPoints: true }) {
+        const feedItem = document.createElement('div');
+        feedItem.classList.add('feed-item');
+
+        const pointsHtml = options.showPoints ? `<p class="points">${item.points} points</p>` : '';
+        const date = new Date(item.timestamp).toLocaleDateString();
+        const locationHtml = item.location ? `<span class="post-location">${item.location}</span>` : '';
+        const descriptionHtml = item.description ? `<p class="post-description">${item.description}</p>` : '';
+
+        feedItem.innerHTML = `
+            <div class="post-header">
+                <img src="${item.avatar}" alt="${item.username} avatar">
+                <div class="post-header-info">
+                    <span class="username">${item.username}</span>
+                    ${locationHtml}
+                </div>
+                <span class="post-date">${date}</span>
+            </div>
+            <div class="post-image"><img src="${item.imageUrl}" alt="Catch by ${item.username}"></div>
+            <div class="post-content">
+                <div class="post-info">
+                    <h4>${item.species}</h4>
+                    <p>Weight: ${item.weight} | Length: ${item.length}</p>
+                    ${descriptionHtml}
+                    ${pointsHtml}
+                </div>
+            </div>`;
+        return feedItem;
     }
 
     // --- Initial App Load ---
