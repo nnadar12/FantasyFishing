@@ -12,8 +12,6 @@ save(args);*/
 export default function save(args) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  console.log(__dirname);
-  console.log(path.join(__dirname, 'Save.class'));
 
   const scriptDir = __dirname; // /.../server/data
   const repoRoot = path.resolve(scriptDir, '..', '..');
