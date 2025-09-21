@@ -5,7 +5,7 @@ if (args.length === 0) {
   process.exit(1);
 }
 save(args);*/
-export function save(args) {
+export default function save(args) {
   const { spawn } = require("child_process");
   const path = require("path");
   const fs = require("fs");
