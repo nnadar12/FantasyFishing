@@ -10,6 +10,7 @@
     --shadow: 0 4px 12px rgba(0,0,0,0.05);
     --border-color: #eaf0f6;
     --border-radius: 20px;
+    --danger-color: #ef4444; /* THE CHANGE: Added a red for likes */
 }
 
 * {
@@ -46,23 +47,9 @@ body {
 .login-box input { width: 100%; padding: 1rem; margin-bottom: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
 .login-box button { width: 100%; padding: 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color 0.2s; }
 .login-box button:hover { background-color: #2563eb; }
-
-.login-box .signup-link {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: var(--text-color-light);
-}
-
-.login-box .signup-link a {
-    color: var(--primary-color);
-    font-weight: 600;
-    text-decoration: none;
-    transition: text-decoration 0.2s;
-}
-
-.login-box .signup-link a:hover {
-    text-decoration: underline;
-}
+.login-box .signup-link { margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-color-light); }
+.login-box .signup-link a { color: var(--primary-color); font-weight: 600; text-decoration: none; transition: text-decoration 0.2s; }
+.login-box .signup-link a:hover { text-decoration: underline; }
 
 
 /* App Container & Header */
@@ -84,291 +71,98 @@ header nav a.active, header nav a:hover { color: var(--primary-color); border-bo
 main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 
 /* Feed Section Styles */
-#feed, #league-feed {
-    display: grid;
-    gap: 2rem;
-}
+#feed, #league-feed { display: grid; gap: 2rem; }
+.feed-item { background: var(--card-background); border-radius: var(--border-radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; }
+.post-header { display: flex; align-items: center; padding: 1rem 1.5rem; }
+.post-header img { width: 45px; height: 45px; border-radius: 50%; margin-right: 0.75rem; }
+.post-header-info { flex-grow: 1; }
+.post-header .username { font-weight: 600; font-size: 1.1rem; }
+.post-location { font-size: 0.9rem; color: var(--text-color-light); }
+.post-date { font-size: 0.9rem; color: var(--text-color-light); }
+.post-image img { width: 100%; height: auto; display: block; }
+.post-content { padding: 1rem 1.5rem 1.5rem; }
+.post-info h4 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; }
+.post-description { font-size: 1rem; line-height: 1.4; color: var(--text-color); margin-bottom: 0.75rem; }
+.post-info p { font-size: 1rem; line-height: 1.4; color: var(--text-color-light); margin-bottom: 0.75rem; }
+.post-info .points { font-weight: 700; color: var(--secondary-color); font-size: 1.25rem; }
 
-.feed-item {
-    background: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-}
-
-.post-header {
+/* THE CHANGE: New styles for the post actions (like button) */
+.post-actions {
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-color);
 }
-
-.post-header img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-right: 0.75rem;
-}
-
-/* THE CHANGE: New styles for feed post headers */
-.post-header-info {
-    flex-grow: 1;
-}
-.post-header .username {
-    font-weight: 600;
-    font-size: 1.1rem;
-    display: block;
-}
-.post-location {
-    font-size: 0.9rem;
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem; /* Makes the heart icon bigger */
     color: var(--text-color-light);
+    padding: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
-.post-date {
-    font-size: 0.9rem;
-    color: var(--text-color-light);
-    margin-left: auto;
-    white-space: nowrap;
+.like-btn:hover {
+    transform: scale(1.1);
 }
-
-
-.post-image img {
-    width: 100%;
-    height: auto;
-    display: block;
+.like-btn.liked {
+    color: var(--danger-color); /* The heart turns red when liked */
 }
-
-.post-content {
-    padding: 1rem 1.5rem 1.5rem;
-}
-
-.post-info h4 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.post-info p {
+.likes-count {
     font-size: 1rem;
-    line-height: 1.4;
-    color: var(--text-color-light);
-    margin-bottom: 0.75rem;
-}
-
-.post-description {
+    font-weight: 600;
     color: var(--text-color);
-    margin-bottom: 0.75rem;
 }
-
-.post-info .points {
-    font-weight: 700;
-    color: var(--secondary-color);
-    font-size: 1.25rem;
-}
-
 
 /* Upload Section Styles */
 #upload .upload-box { background: var(--card-background); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow); max-width: 500px; margin: 2rem auto; text-align: center; }
 #upload .upload-box h2 { margin-bottom: 1.5rem; }
-
-.image-preview {
-    width: 100%;
-    margin-bottom: 1.5rem;
-}
-
-#preview-image {
-    max-width: 100%;
-    max-height: 400px;
-    border-radius: 12px;
-    margin: 0 auto 1.5rem;
-    border: 1px solid var(--border-color);
-}
-
-.custom-file-upload {
-    border: 2px dashed var(--border-color);
-    border-radius: 12px;
-    padding: 2.5rem;
-    display: inline-block;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
-    color: var(--text-color-light);
-}
-.custom-file-upload:hover {
-    background-color: #f8fafc;
-}
-.custom-file-upload i {
-    margin-right: 0.5rem;
-}
-
-#file-upload {
-    display: none;
-}
-
-#fish-info {
-    text-align: left;
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
+.image-preview { width: 100%; margin-bottom: 1.5rem; }
+#preview-image { max-width: 100%; max-height: 400px; border-radius: 12px; margin: 0 auto 1.5rem; border: 1px solid var(--border-color); }
+.custom-file-upload { border: 2px dashed var(--border-color); border-radius: 12px; padding: 2.5rem; display: inline-block; cursor: pointer; transition: background-color 0.2s; font-weight: 500; color: var(--text-color-light); }
+.custom-file-upload:hover { background-color: #f8fafc; }
+.custom-file-upload i { margin-right: 0.5rem; }
+#file-upload { display: none; }
+#fish-info { text-align: left; background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
 #fish-info h3 { text-align: center; margin-bottom: 1rem; font-size: 1.2rem; }
 #fish-info p { margin-bottom: 0.5rem; color: var(--text-color); }
 #fish-info p strong { color: var(--text-color); }
+#fish-info #description-input, #fish-info #location-input { width: 100%; padding: 0.75rem; margin-top: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color); font-family: 'Poppins', sans-serif; }
+#submit-catch-btn { width: 100%; padding: 1rem; background-color: var(--secondary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color 0.2s; }
+#submit-catch-btn:hover { background-color: #11a393; }
 
-/* THE CHANGE: Style for new inputs in upload form */
-#fish-info input[type="text"] {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-}
-
-#submit-catch-btn {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
-
-#submit-catch-btn:hover {
-    background-color: #11a393;
-}
-
-/* New styles for generic buttons */
-.button-primary {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.button-primary:hover {
-    background-color: #2563eb;
-}
-.button-secondary {
-    background-color: var(--card-background);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-.button-secondary:hover {
-    background-color: #f8fafc;
-    border-color: #d1dce8;
-}
-.button-primary i, .button-secondary i {
-    margin-right: 0.5rem;
-}
-
+/* Generic Button Styles */
+.button-primary { background-color: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+.button-primary:hover { background-color: #2563eb; }
+.button-secondary { background-color: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+.button-secondary:hover { background-color: #f8fafc; border-color: #d1dce8; }
+.button-primary i, .button-secondary i { margin-right: 0.5rem; }
 
 /* Leagues Section Styles */
-.league-actions {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    justify-content: center;
-}
-.league-actions button {
-    flex-grow: 1;
-}
+.league-container { max-width: 500px; margin: 0 auto; }
+.league-actions { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; }
+.league-actions button { flex-grow: 1; }
+.league-card { background: var(--card-background); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 1rem; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.league-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
 
-.league-card { 
-    background: var(--card-background); 
-    padding: 1.5rem; 
-    border-radius: var(--border-radius); 
-    box-shadow: var(--shadow); 
-    margin-bottom: 1rem; 
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.league-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-/* New styles for League Detail View */
-.league-detail-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-.league-detail-header h2 {
-    margin: 0;
-    flex-grow: 1;
-    text-align: center;
-}
-#back-to-leagues-btn {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background-color 0.2s, color 0.2s;
-}
-#back-to-leagues-btn:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-.league-nav {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-.league-nav a {
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: var(--text-color-light);
-    border-bottom: 3px solid transparent;
-    transition: color 0.2s, border-bottom-color 0.2s;
-}
-.league-nav a.active, .league-nav a:hover {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
-}
-#league-dashboard-content {
-    background: var(--card-background);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 2rem;
-}
-.leaderboard-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.leaderboard-table th, .leaderboard-table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
+/* League Detail View */
+.league-detail-header { display: flex; align-items: center; margin-bottom: 1.5rem; }
+.league-detail-header h2 { margin: 0; flex-grow: 1; text-align: center; }
+#back-to-leagues-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: background-color 0.2s, color 0.2s; }
+#back-to-leagues-btn:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+.league-nav { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+.league-nav a { padding: 0.5rem 1rem; text-decoration: none; font-weight: 500; color: var(--text-color-light); border-bottom: 3px solid transparent; transition: color 0.2s, border-bottom-color 0.2s; }
+.league-nav a.active, .league-nav a:hover { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+#league-dashboard-content { background: var(--card-background); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem; }
+.leaderboard-table { width: 100%; border-collapse: collapse; }
+.leaderboard-table th, .leaderboard-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
 .leaderboard-table th { font-weight: 600; }
 .leaderboard-table td:last-child { font-weight: 700; color: var(--secondary-color); text-align: right; }
 .member-list { list-style: none; }
 .member-list li { padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
 .feed-divider { text-align: center; color: var(--text-color-light); margin-bottom: 1.5rem; }
-
 
 /* Profile Section */
 #profile .profile-header { text-align: center; margin-bottom: 2rem; }
@@ -378,38 +172,7 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 #user-catches-grid img { width: 100%; height: 200px; object-fit: cover; display: block; border-radius: 12px; box-shadow: var(--shadow); }
 
 /* Loading Overlay Styles */
-#loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: var(--text-color);
-}
-
-#loading-overlay .spinner {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid var(--primary-color);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-#loading-overlay p {
-    font-size: 1.2rem;
-    font-weight: 500;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+#loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-color); }
+#loading-overlay .spinner { border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+#loading-overlay p { font-size: 1.2rem; font-weight: 500; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
