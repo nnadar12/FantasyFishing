@@ -32,7 +32,7 @@ export async function getFish(imagePath) {
                 data: base64ImageFile,
             },
         },
-        { text: "Identify the fish species, weight in pounds, and length in inches. Provide only the JSON object." },
+        { text: "Identify the fish species, weight in pounds with just the number, and length in inches with just the number. Provide only the JSON object. Don't modify weight or length keep them as is" },
         
     ];
     
