@@ -7,6 +7,8 @@ We used vscode acommpanied with the Live Server extension by Ritwick Dey to test
 
 ## Build and Run
 
+You need to have a Gemini API key that can be used by our program. We unfortunatly don't know a way that works for all three mainstream operating systems (Linux, MacOS, and Windows), please refer to online guides for help.
+
 It's recommended that you have a basic understanding of terminal commands and Visual Studio Code so you don't get too lost.
 1. Download and install Node.js (if you don't have it) through your web browser or any other alternatives you know about.
 2. Download and install Visual Studio Code (if you don't have it) through any means viable.
