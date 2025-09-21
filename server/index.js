@@ -101,9 +101,10 @@ app.get('/api/images', (req, res) => {
                     } else {
                         try {
                             const analysis = JSON.parse(data);
+                            // THE FIX: Directly use the analysis object, as it's no longer an array.
                             resolve({
                                 imageUrl: `/uploads/${imageFile}`,
-                                analysis: analysis[0] // The AI returns an array, take the first fish
+                                analysis: analysis 
                             });
                         } catch (parseErr) {
                             resolve(null); // JSON is corrupted
