@@ -76,27 +76,50 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// Endpoint to get a list of all uploaded images
+// Endpoint to get a list of all analyzed catches
 app.get('/api/images', (req, res) => {
     const uploadDirectory = path.join(__dirname, 'uploads/');
     
     fs.readdir(uploadDirectory, (err, files) => {
         if (err) {
-            // If the directory doesn't exist, return an empty array
             if (err.code === 'ENOENT') {
                 return res.status(200).json([]);
             }
             return res.status(500).json({ message: 'Unable to scan directory.' });
         }
         
-        // Map files to their correct URL paths
-        const imagePaths = files
-            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-            .map(file => `/uploads/${file}`);
+        const imageFiles = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+        
+        const catchPromises = imageFiles.map(imageFile => {
+            return new Promise((resolve) => {
+                const imageName = path.parse(imageFile).name;
+                const jsonPath = path.join(uploadDirectory, `${imageName}.json`);
 
-        res.status(200).json(imagePaths);
+                fs.readFile(jsonPath, 'utf8', (err, data) => {
+                    if (err) {
+                        resolve(null); // JSON file not found or unreadable
+                    } else {
+                        try {
+                            const analysis = JSON.parse(data);
+                            resolve({
+                                imageUrl: `/uploads/${imageFile}`,
+                                analysis: analysis[0] // The AI returns an array, take the first fish
+                            });
+                        } catch (parseErr) {
+                            resolve(null); // JSON is corrupted
+                        }
+                    }
+                });
+            });
+        });
+
+        Promise.all(catchPromises).then(results => {
+            const validCatches = results.filter(r => r !== null);
+            res.status(200).json(validCatches);
+        });
     });
 });
+
 
 const port = process.env.PORT || 3000;
 

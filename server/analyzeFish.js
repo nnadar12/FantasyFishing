@@ -67,10 +67,16 @@ export async function getFish(imagePath) {
             },
         });
         console.log('Generation result:', result.text);
-        return result;
-        /* const response = result.response;
-        const parsedJson = JSON.parse(response.text());
-        return parsedJson; */
+        const jsonText = result.text().substring(7, result.text().length - 3); // Remove "```json" and "```"
+
+        // Save the raw JSON string to a file
+        const jsonFilePath = imagePath.replace(/\.[^/.]+$/, "") + ".json";
+        fs.writeFileSync(jsonFilePath, jsonText, 'utf8');
+        console.log(`Analysis saved to: ${jsonFilePath}`);
+
+        // Parse and return the JSON object
+        const parsedJson = JSON.parse(jsonText);
+        return parsedJson;
 
     } catch (err) {
         // This block was being triggered, causing the error on the frontend.

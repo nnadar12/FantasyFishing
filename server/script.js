@@ -47,30 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${API_URL}/api/images`);
             if (!response.ok) throw new Error('Could not fetch images.');
             
-            const imagePaths = await response.json();
+            const analyzedCatches = await response.json();
 
-            // This function creates placeholder data for images already on the server before AI was implemented
-            const createPlaceholderData = () => {
-                const speciesList = ['Spotted Seatrout', 'Cobia', 'King Mackerel', 'Sheepshead'];
-                const species = speciesList[Math.floor(Math.random() * speciesList.length)];
-                const weight = `${(Math.random() * 10 + 2).toFixed(1)} lbs`;
-                const length = `${(Math.random() * 15 + 12).toFixed(1)} inches`;
-                const points = Math.floor(Math.random() * 150 + 50);
-                return { species, weight, length, points };
-            }
+            const localCatches = analyzedCatches.map(catchItem => {
+                const fishData = catchItem.analysis;
+                const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
+                const lengthInInches = `${fishData.length.toFixed(1)} inches`;
+                const points = Math.round(fishData.weight * 15 + fishData.length);
 
-            const localCatches = imagePaths.map(path => {
-                const placeholderData = createPlaceholderData();
                 return {
                     username: loggedInUser,
                     avatar: userAvatarUrl,
-                    species: placeholderData.species,
-                    weight: placeholderData.weight,
-                    length: placeholderData.length,
-                    points: placeholderData.points,
-                    imageUrl: `${API_URL}${path}` 
+                    species: fishData.speciesName,
+                    weight: weightInLbs,
+                    length: lengthInInches,
+                    points: points,
+                    imageUrl: `${API_URL}${catchItem.imageUrl}`
                 };
             });
+
             masterFeedData = [...localCatches.reverse(), ...masterFeedData];
         } catch (error) {
             console.error("Failed to load local catches:", error);
