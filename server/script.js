@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- User Session Management ---
     const loggedInUser = sessionStorage.getItem('fantasy-fishing-username');
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout-btn');
     const profileUsername = document.getElementById('profile-username');
     const profileAvatar = document.getElementById('profile-avatar');
-    
+
     const fileUploadInput = document.getElementById('file-upload');
     const imagePreview = document.getElementById('preview-image');
     const fishInfoContainer = document.getElementById('fish-info');
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // NEW: Loading overlay element
     const loadingOverlay = document.getElementById('loading-overlay');
-    
+
     // --- Dynamic User Data ---
     const userAvatarUrl = `https://i.pravatar.cc/150?u=${loggedInUser}`;
     profileUsername.textContent = loggedInUser;
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${API_URL}/api/images`);
             if (!response.ok) throw new Error('Could not fetch images.');
-            
+
             const analyzedCatches = await response.json();
 
             const localCatches = analyzedCatches.map(catchItem => {
@@ -102,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     });
 
-    fileUploadInput.addEventListener('change', async function() {
+    fileUploadInput.addEventListener('change', async function () {
         const file = this.files[0];
         if (!file) return;
 
@@ -131,7 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const err = await response.json();
                 throw new Error(err.message || 'Analysis failed on the server.');
             }
-            
+            const jsonFileName = (item.imageUrl.substring(0, item.imageUrl.length - 3) + 'json');
+            const result = fetch(jsonFileName)
+                .then(response => response.json())
+                .then(data => {
+                    const speciesName = data.species;
+                    const weightInLbs = data.weight;
+                    const lengthInInches = data.length;
+
+                    console.log(speciesName);
+                    console.log(weightInLbs);
+                    console.log(lengthInInches);
+                }).catch(error => console.error('Error fetching the JSON file:', error));
+
+            const speciesName = result.speciesName;
+            const weightInLbs = result.weightInLbs;
+            const lengthInInches = result.lengthInInches;
+            /*
             const result = await response.json();
             const fishData = result.analysis[0]; // Assuming one fish per image
             //const fishData = result[0];
@@ -141,13 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const lengthInInches = `${fishData.length.toFixed(1)} inches`;
             //const lengthInInches = result[2];
             // Simple points calculation based on results
+            */
             const points = Math.round(fishData.weight * 15 + fishData.length);
 
-            document.getElementById('species').textContent = fishData.speciesName;
+            document.getElementById('species').textContent = speciesName;
             document.getElementById('weight').textContent = weightInLbs;
             document.getElementById('length').textContent = lengthInInches;
             document.getElementById('points').textContent = points;
-            
+
             currentCatchData = {
                 imageUrl: `${API_URL}${result.filePath}`,
                 species: fishData.speciesName,
@@ -170,13 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingOverlay.classList.add('hidden');
         }
     });
-    
+
     submitCatchBtn.addEventListener('click', () => {
         if (!currentCatchData) {
             alert("No catch data to publish. Please upload an image first.");
             return;
         }
-        
+
         submitCatchBtn.textContent = 'Publishing...';
         submitCatchBtn.disabled = true;
 
@@ -190,12 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
         masterFeedData.unshift(newCatch);
         renderFeed();
         renderUserCatches();
-        
+
         navigateTo('feed');
-        
+
         resetUploadForm();
     });
-    
+
     // --- Render Functions ---
     function renderFeed() {
         feed.innerHTML = '';
