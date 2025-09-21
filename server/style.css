@@ -29,17 +29,16 @@ body {
 }
 
 /* Login Page Styles */
-/* THE CHANGE: Updated login container with background image and left alignment */
 #login-container {
     display: flex;
-    justify-content: flex-start; /* Aligns content to the left */
+    justify-content: flex-start; 
     align-items: center;
     height: 100vh;
-    background-image: url('https://bloximages.newyork1.vip.townnews.com/appenmedia.com/content/tncms/assets/v3/editorial/e/2c/e2cfaba0-d294-11ed-b11a-c36ea4f21ca7/642b93e0f24ef.preview.jpg?crop=1187%2C623%2C0%2C130'); /* Your fish image */
+    background-image: url('https://bloximages.newyork1.vip.townnews.com/appenmedia.com/content/tncms/assets/v3/editorial/e/2c/e2cfaba0-d294-11ed-b11a-c36ea4f21ca7/642b93e0f24ef.preview.jpg?crop=1187%2C623%2C0%2C130');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding-left: 10vw; /* Adds space from the left edge */
+    padding-left: 10vw;
 }
 
 .login-box { background: var(--card-background); padding: 3rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px; }
@@ -85,7 +84,7 @@ header nav a.active, header nav a:hover { color: var(--primary-color); border-bo
 main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 
 /* Feed Section Styles */
-#feed {
+#feed, #league-feed {
     display: grid;
     gap: 2rem;
 }
@@ -95,7 +94,7 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
-    overflow: hidden; /* Ensures the image respects the border radius */
+    overflow: hidden;
 }
 
 .post-header {
@@ -111,10 +110,26 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
     margin-right: 0.75rem;
 }
 
+/* THE CHANGE: New styles for feed post headers */
+.post-header-info {
+    flex-grow: 1;
+}
 .post-header .username {
     font-weight: 600;
     font-size: 1.1rem;
+    display: block;
 }
+.post-location {
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+.post-date {
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+    margin-left: auto;
+    white-space: nowrap;
+}
+
 
 .post-image img {
     width: 100%;
@@ -139,6 +154,11 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
     margin-bottom: 0.75rem;
 }
 
+.post-description {
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
 .post-info .points {
     font-weight: 700;
     color: var(--secondary-color);
@@ -150,7 +170,6 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 #upload .upload-box { background: var(--card-background); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow); max-width: 500px; margin: 2rem auto; text-align: center; }
 #upload .upload-box h2 { margin-bottom: 1.5rem; }
 
-/* New styles for the image preview and upload interaction */
 .image-preview {
     width: 100%;
     margin-bottom: 1.5rem;
@@ -182,7 +201,7 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 }
 
 #file-upload {
-    display: none; /* Hide the default file input */
+    display: none;
 }
 
 #fish-info {
@@ -195,6 +214,17 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 #fish-info h3 { text-align: center; margin-bottom: 1rem; font-size: 1.2rem; }
 #fish-info p { margin-bottom: 0.5rem; color: var(--text-color); }
 #fish-info p strong { color: var(--text-color); }
+
+/* THE CHANGE: Style for new inputs in upload form */
+#fish-info input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
 
 #submit-catch-btn {
     width: 100%;
@@ -213,9 +243,134 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
     background-color: #11a393;
 }
 
+/* New styles for generic buttons */
+.button-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.button-primary:hover {
+    background-color: #2563eb;
+}
+.button-secondary {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.button-secondary:hover {
+    background-color: #f8fafc;
+    border-color: #d1dce8;
+}
+.button-primary i, .button-secondary i {
+    margin-right: 0.5rem;
+}
 
-/* Other Sections */
-#leagues .league-card { background: var(--card-background); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 1rem; border: 1px solid var(--border-color); }
+
+/* Leagues Section Styles */
+.league-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+.league-actions button {
+    flex-grow: 1;
+}
+
+.league-card { 
+    background: var(--card-background); 
+    padding: 1.5rem; 
+    border-radius: var(--border-radius); 
+    box-shadow: var(--shadow); 
+    margin-bottom: 1rem; 
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.league-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* New styles for League Detail View */
+.league-detail-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.league-detail-header h2 {
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+}
+#back-to-leagues-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+#back-to-leagues-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.league-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.league-nav a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--text-color-light);
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s;
+}
+.league-nav a.active, .league-nav a:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+#league-dashboard-content {
+    background: var(--card-background);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.leaderboard-table th, .leaderboard-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.leaderboard-table th { font-weight: 600; }
+.leaderboard-table td:last-child { font-weight: 700; color: var(--secondary-color); text-align: right; }
+.member-list { list-style: none; }
+.member-list li { padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
+.feed-divider { text-align: center; color: var(--text-color-light); margin-bottom: 1.5rem; }
+
+
+/* Profile Section */
 #profile .profile-header { text-align: center; margin-bottom: 2rem; }
 #profile .profile-header img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 4px solid var(--card-background); box-shadow: var(--shadow); }
 #profile h3 { text-align: center; margin-bottom: 1.5rem; }
@@ -240,8 +395,8 @@ main { padding: 2rem; max-width: 680px; margin: 0 auto; }
 }
 
 #loading-overlay .spinner {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid var(--primary-color); /* Blue */
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid var(--primary-color);
     border-radius: 50%;
     width: 60px;
     height: 60px;
