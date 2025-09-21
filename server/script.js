@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- User Session Management ---
     const loggedInUser = sessionStorage.getItem('fantasy-fishing-username');
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout-btn');
     const profileUsername = document.getElementById('profile-username');
     const profileAvatar = document.getElementById('profile-avatar');
-
+    
     const fileUploadInput = document.getElementById('file-upload');
     const imagePreview = document.getElementById('preview-image');
     const fishInfoContainer = document.getElementById('fish-info');
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // NEW: Loading overlay element
     const loadingOverlay = document.getElementById('loading-overlay');
-
+    
     // --- Dynamic User Data ---
     const userAvatarUrl = `https://i.pravatar.cc/150?u=${loggedInUser}`;
     profileUsername.textContent = loggedInUser;
@@ -47,25 +46,34 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${API_URL}/api/images`);
             if (!response.ok) throw new Error('Could not fetch images.');
-
+            
             const analyzedCatches = await response.json();
 
-            const localCatches = analyzedCatches.map(catchItem => {
-                const fishData = catchItem.analysis;
-                const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
-                const lengthInInches = `${fishData.length.toFixed(1)} inches`;
-                const points = Math.round(fishData.weight * 15 + fishData.length);
+            // THE FIX: This function now correctly processes the new JSON format.
+            const localCatches = analyzedCatches
+                .map(catchItem => {
+                    const fishData = catchItem.analysis;
 
-                return {
-                    username: loggedInUser,
-                    avatar: userAvatarUrl,
-                    species: fishData.speciesName,
-                    weight: weightInLbs,
-                    length: lengthInInches,
-                    points: points,
-                    imageUrl: `${API_URL}${catchItem.imageUrl}`
-                };
-            });
+                    // Prevents a crash if a JSON file is empty or corrupted
+                    if (!fishData || typeof fishData.weight === 'undefined') {
+                        return null;
+                    }
+                    
+                    const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
+                    const lengthInInches = `${fishData.length.toFixed(1)} inches`;
+                    const points = Math.round(fishData.weight * 15 + fishData.length);
+
+                    return {
+                        username: loggedInUser,
+                        avatar: userAvatarUrl,
+                        species: fishData.species, // Use 'species' instead of 'speciesName'
+                        weight: weightInLbs,
+                        length: lengthInInches,
+                        points: points,
+                        imageUrl: `${API_URL}${catchItem.imageUrl}`
+                    };
+                })
+                .filter(item => item !== null); // Remove any corrupted items
 
             masterFeedData = [...localCatches.reverse(), ...masterFeedData];
         } catch (error) {
@@ -103,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     });
 
-    fileUploadInput.addEventListener('change', async function () {
+    fileUploadInput.addEventListener('change', async function() {
         const file = this.files[0];
         if (!file) return;
 
@@ -132,43 +140,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 const err = await response.json();
                 throw new Error(err.message || 'Analysis failed on the server.');
             }
-            const jsonFileName = (item.imageUrl.substring(0, item.imageUrl.length - 3) + 'json');
-            const result = fetch(jsonFileName)
-                .then(response => response.json())
-                .then(data => {
-                    const speciesName = data.species;
-                    const weightInLbs = data.weight;
-                    const lengthInInches = data.length;
-
-                    console.log(speciesName);
-                    console.log(weightInLbs);
-                    console.log(lengthInInches);
-                }).catch(error => console.error('Error fetching the JSON file:', error));
-
-            const speciesName = result.speciesName;
-            const weightInLbs = result.weightInLbs;
-            const lengthInInches = result.lengthInInches;
-            /*
+            
             const result = await response.json();
-            const fishData = result.analysis[0]; // Assuming one fish per image
-            //const fishData = result[0];
+            
+            // THE FIX: The result from the API is now a single object, not an array.
+            const fishData = result.analysis;
+
+            if (!fishData || typeof fishData.weight === 'undefined') {
+                throw new Error('Could not identify a fish in the image. Please try another one.');
+            }
+
             // 3. Populate form and store data for publishing
             const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
-            //const weightInLbs = result[1];
             const lengthInInches = `${fishData.length.toFixed(1)} inches`;
-            //const lengthInInches = result[2];
             // Simple points calculation based on results
-            */
             const points = Math.round(fishData.weight * 15 + fishData.length);
 
-            document.getElementById('species').textContent = speciesName;
+            document.getElementById('species').textContent = fishData.species; // Use 'species'
             document.getElementById('weight').textContent = weightInLbs;
             document.getElementById('length').textContent = lengthInInches;
             document.getElementById('points').textContent = points;
-
+            
             currentCatchData = {
                 imageUrl: `${API_URL}${result.filePath}`,
-                species: fishData.speciesName,
+                species: fishData.species, // Use 'species'
                 weight: weightInLbs,
                 length: lengthInInches,
                 points: points
@@ -188,13 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingOverlay.classList.add('hidden');
         }
     });
-
+    
     submitCatchBtn.addEventListener('click', () => {
         if (!currentCatchData) {
             alert("No catch data to publish. Please upload an image first.");
             return;
         }
-
+        
         submitCatchBtn.textContent = 'Publishing...';
         submitCatchBtn.disabled = true;
 
@@ -208,12 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
         masterFeedData.unshift(newCatch);
         renderFeed();
         renderUserCatches();
-
+        
         navigateTo('feed');
-
+        
         resetUploadForm();
     });
-
+    
     // --- Render Functions ---
     function renderFeed() {
         feed.innerHTML = '';
