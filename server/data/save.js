@@ -10,6 +10,7 @@ if (args.length === 0) {
 }
 save(args);*/
 export default function save(args) {
+  console.log(args);
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
@@ -39,7 +40,7 @@ export default function save(args) {
     );
   }*/
 
-  const javaArgs = ['-cp', classpath, className, ...args];
+  const javaArgs = ['-cp', classpath, className, args];
 
   // Forward stdio (stdout/stderr/stdin) to parent process for simplicity
   const javaProcess = spawn('java', javaArgs, { stdio: 'inherit' });
