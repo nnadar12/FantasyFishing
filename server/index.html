@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fantasy Fishing</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐠</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100%22><text y=%22.9em%22 font-size=%2290%22>🐠</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -34,26 +34,26 @@
                 <div class="upload-box">
                     <h2>Log a New Catch</h2>
                     <div class="image-preview">
-                        <!-- The initially hidden image tag for the preview -->
                         <img id="preview-image" src="#" alt="Image Preview" class="hidden"/>
                         
-                        <!-- The file input is hidden and triggered by the label -->
                         <label for="file-upload" class="custom-file-upload">
                             <i class="fas fa-camera"></i> Take or Upload Photo
                         </label>
                         <input id="file-upload" type="file" accept="image/*"/>
                     </div>
                     
-                    <!-- This container will be shown after image selection -->
                     <div id="fish-info" class="hidden">
                         <h3>Fish Details</h3>
                         <p><strong>Species:</strong> <span id="species"></span></p>
                         <p><strong>Weight:</strong> <span id="weight"></span></p>
                         <p><strong>Length:</strong> <span id="length"></span></p>
                         <p><strong>Points:</strong> <span id="points"></span></p>
+                        
+                        <!-- THE CHANGE: New inputs for description and location -->
+                        <input type="text" id="description-input" placeholder="Add a description...">
+                        <input type="text" id="location-input" placeholder="Add a location...">
                     </div>
                     
-                    <!-- The publish button, also initially hidden -->
                     <button id="submit-catch-btn" class="hidden">Publish</button>
                 </div>
             </section>
@@ -62,17 +62,52 @@
             <section id="leagues" class="hidden">
                 <div class="league-container">
                     <h2>My Leagues</h2>
-                    <div class="league-card">
+
+                    <div class="league-actions">
+                        <button id="join-league-btn" class="button-secondary"><i class="fas fa-search"></i> Join a League</button>
+                        <button id="create-league-btn" class="button-primary"><i class="fas fa-plus"></i> Create a League</button>
+                    </div>
+
+                    <div class="league-card" data-league-id="weekend-warriors">
                         <h3>Weekend Warriors</h3>
-                        <p>1st Place: Angler_Alex (1530 pts)</p>
-                        <p>Your Rank: 3rd (950 pts)</p>
+                        <p>Click to view league</p>
                     </div>
                 </div>
             </section>
             
+            <section id="league-detail" class="hidden">
+                <div class="league-detail-header">
+                    <button id="back-to-leagues-btn"><i class="fas fa-arrow-left"></i> All Leagues</button>
+                    <h2 id="league-detail-name"></h2>
+                </div>
+                
+                <nav class="league-nav">
+                    <a href="#leaderboard" class="active" data-tab="leaderboard">Leaderboard</a>
+                    <a href="#members" data-tab="members">Members</a>
+                    <a href="#settings" data-tab="settings">Settings</a>
+                </nav>
+
+                <div id="league-dashboard-content">
+                    <div id="leaderboard-content" class="league-tab-content">
+                        <!-- Leaderboard will be dynamically inserted here -->
+                    </div>
+                    <div id="members-content" class="league-tab-content hidden">
+                        <!-- Member list will be dynamically inserted here -->
+                    </div>
+                    <div id="settings-content" class="league-tab-content hidden">
+                        <h3>League Settings</h3>
+                        <p>Settings for this league will be displayed here.</p>
+                    </div>
+                </div>
+
+                <h3 class="feed-divider">League Feed</h3>
+                <div id="league-feed">
+                    <!-- The league-specific feed will be dynamically inserted here -->
+                </div>
+            </section>
+
             <!-- User Profile Section -->
             <section id="profile" class="hidden">
-                <!-- THE CHANGE: Elements now have IDs and empty content -->
                 <div class="profile-header">
                     <img id="profile-avatar" src="" alt="User Avatar">
                     <h2 id="profile-username"></h2>
