@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadBoxLabel = document.querySelector('.custom-file-upload');
     const loadingOverlay = document.getElementById('loading-overlay');
     
-    // THE CHANGE: New selectors for description and location inputs
     const descriptionInput = document.getElementById('description-input');
     const locationInput = document.getElementById('location-input');
     
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'http://localhost:3000';
     let currentCatchData = null;
 
-    // THE CHANGE: Updated mock data to include timestamp, location, and description
     let masterFeedData = [
         { username: 'Aadit', avatar: 'https://lh3.googleusercontent.com/rd-d/ALs6j_F82c3j0d2LFgpqHx7LKEknh-dhVfmwt7GuSSm7Q4OWIgN9GmsaKHT05f2ynNZtHFjF9Lphn5O2h-X1LVWQw2o90UrXmiAlqOCWC0QzUp9BdloW_wN3z4-WA9sKAdLuMq7UGQ2MHFMFtsg5QuNs5BN7tPAENknlhKy87tAIubzIDS34UKP5MTnf6yQamXc80LESnNy-TbIQnhyGPtkMJ7gI_jQuYrI-ITJVPos0QMOHyHMKQQzcHp5rWX9GHvW8__fEsS37rFWKNE8C-JJUBGrE2xtfoK7bIjMbAIUFUYFxzLz-PCcUfiFTi7Etc27m_n34AJ9qEhHOmoyOTJ4W_VLvRyPEU1l980f4NUPcUXiQ6dByTDNE2a-jdBPWSLXpG2_fyHJVPndmfoqmvuDwppdmRjaGe8B5DXFBrcBGxcIox0FYqmIAuYoFQeLgZ38zUYjF_nb7E-FY-oHiMlhynTfzAPmEsVeq2Hry5otRUseTCZgaCcAeiANUspS4BAcYZn0vE6GZEMBS_fqWD-p_VSat-eTQ5DT1brrP6OapB08rGXr1r39m4LhewMgO5emRdE3rON8mpt5AjEdM5x3ruLSEh8tyTyPi2IaBGvAli6TVl65M5BO65bq-vaI3CINhSSFNFMcWawN78TnCchm8ft1zNe5U06GdVsbh6TaQB6B0wOBSOGESWcfRf-K2GJ_wsW3QTF0lj7ohEdAw-6qIu5jnoGWcICxlL6XYDjQUa3afFidN9m30-FiRLrxW9gfH6E9hkB5gIaq5rEKbNp98AWsDTXZGdZdkAQJlVlmIbhyiQwllEOS91QlJCVrYuBFv5dQ1Ln42IDVCp7NtE6VWQ6anLobDe0spJ8giNmfHf0f3VS36wLoVTp1Sr-_frDPgSeBi-X5p5X8kcDgsSJTRp3bX_nuHJMRlR2snCOu0csXLZmS3ayePuf24ZFOzXfpk-AoVBiYFDnlq0jieYNcxhyDPCoDt9OxGb0JpFuhb51OeR33Nbuu2dv_WvMOoJ8T4yg=w2256-h1166?auditContext=prefetch', species: 'Largemouth Bass', weight: '2.5 lbs', length: '18 inches', points: 50, imageUrl: 'https://lh3.googleusercontent.com/rd-d/ALs6j_FoPSyFBFJmkZUxenz48ZVPLjhSPoQlrmPdREYzpSqufPmBuM9cE27DyDmqd8exJ5giQZ8mx5IWesVmbCx-suBm4e1d_EXiScMRhiteyeb3ylndcQpIFtY8hCX-4TEHuzX6z4hatlLov2BVf8Rv4KoU7vHAypsuPr3w3b8-Q_6jJ5cpQMkPpG4wNcn-xLCmGXWQsvmIUERZwTtIcyykoD9KB28IF7q-QzRfapVZtFxEsHLrSkZm5k-kWDzQ_yOQDZSKg9NpwP5OfygXzyRWr3GgmhN3xZxCMHfb38y3p6DE4d_qiTC9vO2GzjOUvPLKkcsfzI779aidcJzdmv-zI6Wp7Qb4DQrtU-p5qcE-yMV5pegSGIiAXRtowzatZl4aP0CngGPMP6uzTgw6KYd9FAz6ImTDnZ4p75rJygaPhuBUMuN6N3v7QKngoNW_eeVrczA3aAjGgH3t2YQgrzFXNZkQ5B-gekF7AGXZEtIPUy6Bfp2UcxJ6DamxyVGLxSmKGFAR3ylvEY8Eg_Q4jvsxxv8XuyqicjVtNcx-q-dqrrwZEPLFDRryrbQUFC1WEc7eDnS8RdgszSaRp6JcorWNcLS0kwqKbXN3kF4ei4pTCGNHfyDZ-SjfL3OtUfjUNpGNFhb6G9Mxo7Ifxzzw2L9VHkx2U6JPlgqrckKAdpAotLabspYXFWxqpL4R9MxdbPoBZvvXvxSU-cUht7EzzG-37_bRS7icmeVN41I36VdNa_p0cc9uO7k4ph6DJ0vt6nATOxlhZjYdP7ELjCx010iN_UMvn9wLR1y2S_cZI4GNkMOvQ86g8wmEgGVgt2ZrcD9FaoakIrNperZXsqmkLtDGZM23vF9sNXhGzxdw6V-Afb1hIha0njG9Bs7HnjYluSqbqd91LRO4_iNkfc-DhGoaQWuIsi9gswr-h3pKO9hQT3jcqrfmyFuY9cpSUZxWZ3sr6aZTVikrJZzYsYipXp12Wkbszh7HA30sCEEWoOZTYUw0eGj7N25lXPMpEMcXcbHomZtRgua6wgA8hgQH=w2256-h1166?auditContext=prefetch', timestamp: '2025-09-18T10:00:00Z', location: 'Quabbin Reservoir', description: 'Off da boat on a wacky rig' },
         { username: 'Daniel', avatar: 'https://lh3.googleusercontent.com/rd-d/ALs6j_Fdy3FyXBxvavPGKvKK5GQwn3CnczT-PGnR8Mt2dC6uSp3-q66wGzT0nIZOJgrLEz2A1UTcc_XXr9avvvmdlG5aizm76ma7fnKFMzWoXqjdt7_TETwabHNBhyaD5fnu3-9gRYiUbsw_dpQqB7RW7mZ3n3xCCkxjYQsT0aXRtOYwiAeENmvPlB0LgHzT7j7JNeuBC04AL84L80-E9V82U3bfIj4_MIgKGi4Ly45HFYOqRs0McNIgO4CZXcQz1GTyllgqRN0e6-nPBi4RFImykJLZlTtzJTVbnpPOVTHeWqBxQBQCJL5-lRpg9po5naOU5QM_UIvZSCI-ZiH5nB5SulGu4O9byGnvl3QAYkUuqICPTTR8mndc01T1yectSZfLp7BX978vAy9xYHvMybYHqNkqnFzVJL8qT-xNZ0deWecOzDQvpQcw-Kbuh4eetN9q4-60ZPEDmsmXCZUouU9vBFEB_rPrbz9Bhx4Y8VWXomQEOHMzv6rKpILKdOG5W5ysOKluzRo3dEB452gJxrm5_qtT8UudUUYEZx894sBzOPIITvje7j7U6kJKeCN6aQNJdSVBkqshY3og_KxeLtgzEVIdbrEep3rD9dyJ2EOWbFXCFCESJPimUx0NEEjNJj-z3l7HQymdQGcKX4kC-3GahWMZeCKWL54vFttWf-ftCG0aNQ9KElfECBk9i3XzD7A8ZtVyYGmvAXJg5xTV8FhPzlSEN7F-ua1SlWjexnbGKRG1alrtcZ2glwH3Wo6MqOXjEC7I2wjEoFjGUz6Q_inqLOSvwkNi8efY1Lw_o1ntnpHqZFTf-F2UZvoDAZCIifSLkIo0J-mJAP8HGsiUsbUK17lggvWKxu19yjDA1Fas2v1t0ZGRIuD11k0GeYqqLxQdqII-jH5UTvnKOYeUAVUMTYijfud1OsVSTkVEOYMcYW4pIAGFX3wDBif-CwBfzX9WMoGSQlsPRCeHjzJQcElu4CJgZwnB4TwUzQ6-j8q0lmL76q4yZ5R7LclgB2bVDlm9_ZDVTVy3fO2VG-GKdg=w2256-h1166?auditContext=prefetch', species: 'Largemouth Bass', weight: '4.0 lbs', length: '22 inches', points: 120, imageUrl: 'https://lh3.googleusercontent.com/rd-d/ALs6j_GNYs-a7vp3p3xbz6PQ8XFEfJN21yq2BDnRcRnABM9-ymBnoWVjufsMtcNROhY9nNBeJfFW1Au_HbjHbvqJZ6cNRGpL52GATUHGnLApIz_evp3HO_XuGKOs0YI6Ua7tErnufWMbC_geZRwYiDQ8bGp1D12zrxvRwvr-sDEkeNo0-NkzeT6X_JI0hGWhchcpraL5XBLXqe7Y7UZPSXg9H3elDEKrj8bKfoFzoslmiyfKamCLlJQHgoGbszRWcXGJvdx4x0yo3BaNQS6zVwWqP5eXtHtemejI2-DIovCYy3RR3rf_2qYLXyOtObYw7Li8zRtb55CfKcKTbSqFcdPfokoRn4TXjB98n2YdExY4Y_1VLcJIQFw0l1mw-tHUfkS1igMSVXCjAlo2XkcTDZ0ioA0-bH2L1ZgJC-P3OrYon8J3fq47IiqVcks12Fwyenax0aqJtQ8dBX2SfSKI4HH27gfygHAUwXGE9Wy03Wow2jZ2CuLux0gPO1WstnvA8DUMQEm56qHTkq-EYzeinW0h1iZYo0zDZHz25Y1RboUipFHazBuEbHXkDTel9-S_RrhNAexIl5OVAMVhuFGBdEe2Ka4gur0GOj2sKlELgQFbtqbC2AsdYh4ww3Jwf-nTxfin5qckhXfFwyuHI2EIVA8U8DjRHuivff7x6C2qSZ4zk8YCJtBFOJbAO6lEe0GOh5ibnyq1PKSlcvvUvVxy-liO7_wUZPxeu74Ne_kV5MD49VF9XbFp2wgRGcFpy8GhPcXD3cnj576YhGUgnBjcnrwxQCsqHhVbZl3eO3CUWX7XgLTpGjj0TlaHTJ_i9SkEH5pVLxKXYq6xX3W4PGA1x1zrh0RvYP6hJ2ZAUXYl7QiN5x6jLao2mselZVfAVBZ6Y6gFVf_wXkW8TOAHRfaLUjbGb8_ZESmrmNRkXYmJEtG7NwOgqZC8zSPHtLGhM2_pWzAJ1CAhRXn9Yqtpqx98zEiB2rRlEY5PE5kOpTs6Dfahcvi_JZzvNoDXSBgzyKkd3q19Dw=w1146-h1166?auditContext=prefetch', timestamp: '2025-09-15T18:30:00Z', location: 'Johnson Pond, Waterville, ME', description: '4 pounder on the kayak!' },
@@ -205,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
         submitCatchBtn.textContent = 'Publishing...';
         submitCatchBtn.disabled = true;
 
-        // THE CHANGE: Get values from new inputs and add to the new catch object
         const description = descriptionInput.value;
         const location = locationInput.value;
 
@@ -214,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar: userAvatarUrl,
             description: description,
             location: location,
-            timestamp: new Date().toISOString(), // Use ISO string for consistency
+            timestamp: new Date().toISOString(),
             ...currentCatchData
         };
 
@@ -365,21 +362,28 @@ document.addEventListener('DOMContentLoaded', () => {
         submitCatchBtn.textContent = 'Publish';
         currentCatchData = null;
         
-        // THE CHANGE: Reset new input fields
         descriptionInput.value = '';
         locationInput.value = '';
     }
     
-    // THE CHANGE: This function now renders date, location, and description
+    // THE CHANGE: This function now creates and manages the like button
     function createFeedItem(item, options = { showPoints: true }) {
         const feedItem = document.createElement('div');
         feedItem.classList.add('feed-item');
-
+    
+        // Initialize likes and liked status if they don't exist
+        if (typeof item.likes === 'undefined') {
+            item.likes = 0;
+        }
+        if (typeof item.isLiked === 'undefined') {
+            item.isLiked = false;
+        }
+    
         const pointsHtml = options.showPoints ? `<p class="points">${item.points} points</p>` : '';
         const date = new Date(item.timestamp).toLocaleDateString();
         const locationHtml = item.location ? `<span class="post-location">${item.location}</span>` : '';
         const descriptionHtml = item.description ? `<p class="post-description">${item.description}</p>` : '';
-
+    
         feedItem.innerHTML = `
             <div class="post-header">
                 <img src="${item.avatar}" alt="${item.username} avatar">
@@ -397,7 +401,38 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${descriptionHtml}
                     ${pointsHtml}
                 </div>
+                <div class="post-actions">
+                    <button class="like-btn" aria-label="Like post">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <span class="likes-count">${item.likes} likes</span>
+                </div>
             </div>`;
+        
+        // --- Like Button Functionality ---
+        const likeBtn = feedItem.querySelector('.like-btn');
+        const likeIcon = likeBtn.querySelector('i');
+        const likesCountSpan = feedItem.querySelector('.likes-count');
+    
+        // Set initial state from data
+        if (item.isLiked) {
+            likeBtn.classList.add('liked');
+            likeIcon.classList.remove('far');
+            likeIcon.classList.add('fas');
+        }
+    
+        likeBtn.addEventListener('click', () => {
+            // Update the data model
+            item.isLiked = !item.isLiked;
+            item.likes += item.isLiked ? 1 : -1;
+            
+            // Update the UI
+            likeBtn.classList.toggle('liked', item.isLiked);
+            likeIcon.classList.toggle('fas', item.isLiked);
+            likeIcon.classList.toggle('far', !item.isLiked);
+            likesCountSpan.textContent = `${item.likes} likes`;
+        });
+    
         return feedItem;
     }
 
