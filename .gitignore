@@ -1,8 +1,6 @@
 ApiKey.env
 testFiles\test.json
 node_modules
-package-lock.json
-package.json
 uploads
 server/data/data.txt
 server/data/output.txt
