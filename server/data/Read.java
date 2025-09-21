@@ -1,5 +1,3 @@
-package server.data;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,9 +14,7 @@ public class Read {
         try (Scanner sc = new Scanner(readFile)) {
             while (sc.hasNext()) {
                 String line = sc.nextLine();
-                String token = line.substring(0, Math.min(line.indexOf('\n') == -1 ? line.length() : line.indexOf('\n'),
-                        line.indexOf(' ') == -1 ? line.length() : line.indexOf(' ')));
-                if (token.indexOf(args[0]) == 0) {
+                if (line.indexOf(args[0]) >= 0) {
                     outputString = line;
                     break;
                 }
