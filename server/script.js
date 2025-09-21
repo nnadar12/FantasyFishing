@@ -134,10 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const result = await response.json();
             const fishData = result.analysis[0]; // Assuming one fish per image
-
+            //const fishData = result[0];
             // 3. Populate form and store data for publishing
             const weightInLbs = `${fishData.weight.toFixed(1)} lbs`;
+            //const weightInLbs = result[1];
             const lengthInInches = `${fishData.length.toFixed(1)} inches`;
+            //const lengthInInches = result[2];
             // Simple points calculation based on results
             const points = Math.round(fishData.weight * 15 + fishData.length);
 
