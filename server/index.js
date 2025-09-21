@@ -20,16 +20,20 @@ const app = express();
 // --- Middleware ---
 app.use(cors());
 app.use(express.static(__dirname));
+
+// Serve the 'uploads' folder as a static directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Multer Storage Configuration ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, 'uploads');
+    // Ensure the uploads directory exists
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
+    // Create a unique filename to prevent overwrites
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
@@ -38,6 +42,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // --- Routes ---
+
+// **THE FIX**: Add a root route to serve the login page by default.
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
@@ -51,9 +57,14 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 
   try {
+    // Get the full path of the uploaded file
     const imagePath = req.file.path;
-    const analysisResult = await getFish(imagePath);
 
+    // Call the AI function to get fish data
+    const analysisResult = await getFish(imagePath);
+    save(JSON.stringify(analysisResult));
+
+    // Send back the file path and the analysis
     res.status(200).json({
       filePath: `/uploads/${req.file.filename}`,
       analysis: analysisResult,
@@ -83,12 +94,10 @@ app.get('/api/regulations', async (req, res) => {
     res.status(200).json({ summary: regulationsText });
   } catch (error) {
     console.error('Failed to get regulations:', error);
-    res
-      .status(500)
-      .json({
-        message: 'Failed to retrieve regulations.',
-        error: error.message,
-      });
+    res.status(500).json({
+      message: 'Failed to retrieve regulations.',
+      error: error.message,
+    });
   }
 });
 
