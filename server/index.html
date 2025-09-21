@@ -14,13 +14,18 @@
     <div id="app-container">
         <header>
             <div class="logo">Fantasy Fishing</div>
-            <nav>
+            <!-- THE CHANGE: Added an ID to the nav element -->
+            <nav id="main-nav">
                 <a href="#feed" class="active">Feed</a>
                 <a href="#upload">Catch</a>
                 <a href="#leagues">Leagues</a>
                 <a href="#profile">Profile</a>
                 <a href="#" id="logout-btn">Logout</a>
             </nav>
+            <!-- THE CHANGE: Added the hamburger menu button -->
+            <button id="menu-btn" aria-label="Open Menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </header>
 
         <main>
@@ -49,7 +54,6 @@
                         <p><strong>Length:</strong> <span id="length"></span></p>
                         <p><strong>Points:</strong> <span id="points"></span></p>
                         
-                        <!-- THE CHANGE: New Regulations Section -->
                         <div id="regs-container">
                             <h4>Check Local Regulations</h4>
                             <div class="regs-input-group">
