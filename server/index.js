@@ -62,7 +62,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     const imagePath = req.file.path;
 
     // Call the AI function to get fish data
-    const analysisResult = await getFish(imagePath);
+    let analysisResult = await getFish(imagePath);
+    analysisResult['user_name'] = 'John Doe';
     save(JSON.stringify(analysisResult));
 
     // Send back the file path and the analysis
