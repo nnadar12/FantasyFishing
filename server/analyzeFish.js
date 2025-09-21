@@ -67,7 +67,7 @@ export async function getFish(imagePath) {
             },
         });
         console.log('Generation result:', result.text);
-        const jsonText = result.text().substring(7, result.text().length - 3); // Remove "```json" and "```"
+        const jsonText = result.text.substring(7, result.text().length - 3); // Remove "```json" and "```"
 
         // Save the raw JSON string to a file
         const jsonFilePath = imagePath.replace(/\.[^/.]+$/, "") + ".json";
